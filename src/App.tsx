@@ -160,22 +160,27 @@ function App() {
         } p-3 flex items-center justify-between shadow-md transition-colors duration-300`}
       >
         <div className="flex items-center space-x-3">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={`${isDarkMode ? "text-blue-400" : "text-blue-600"}`}
+          <button
+            onClick={backToList}
+            className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
           >
-            <rect width="20" height="15" x="2" y="7" rx="2" ry="2" />
-            <polyline points="17 2 12 7 7 2" />
-          </svg>
-          <h1 className="text-xl font-bold">Live TV Channels</h1>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={`${isDarkMode ? "text-blue-400" : "text-blue-600"}`}
+            >
+              <rect width="20" height="15" x="2" y="7" rx="2" ry="2" />
+              <polyline points="17 2 12 7 7 2" />
+            </svg>
+            <h1 className="text-xl font-bold">Live TV Channels</h1>
+          </button>
         </div>
 
         <div className="flex items-center space-x-2">
@@ -322,128 +327,217 @@ function App() {
       {/* Main Content */}
       <main className="p-4">
         {selectedChannel ? (
-          // Visualização do player
-          <div className="max-w-5xl mx-auto animate-fadeIn">
-            <div
-              className={`${
-                isDarkMode ? "bg-black" : "bg-gray-800"
-              } rounded-xl overflow-hidden shadow-xl aspect-video relative `}
-            >
-              {isLoadingChannel ? (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
-                </div>
-              ) : (
-                <iframe
-                  src={selectedChannel.url}
-                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                  allowFullScreen
-                  frameBorder="0"
-                  width="100%"
-                  height="100%"
-                  sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-autoplay allow-presentation"
-                  referrerPolicy="no-referrer"
-                  loading="lazy"
-                  scrolling="no"
-                  style={{ border: "none" }}
-                  className="w-full h-full"
-                />
-              )}
-            </div>
-
-            <div
-              className={`mt-4 ${
-                isDarkMode ? "bg-gray-800" : "bg-white"
-              } rounded-xl p-4 shadow-md transition-colors duration-300`}
-            >
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-xl font-semibold flex items-center">
-                    {selectedChannel.name}
-                    <button
-                      onClick={(e) => toggleFavorite(selectedChannel.id, e)}
-                      className={`ml-2 transition-transform duration-200 hover:scale-110 ${
-                        favorites.includes(selectedChannel.id)
-                          ? "text-red-500"
-                          : isDarkMode
-                          ? "text-gray-400"
-                          : "text-gray-400"
-                      }`}
-                      aria-label={
-                        favorites.includes(selectedChannel.id)
-                          ? "Remove from favorites"
-                          : "Add to favorites"
-                      }
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill={
-                          favorites.includes(selectedChannel.id)
-                            ? "currentColor"
-                            : "none"
-                        }
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className={`${
-                          favorites.includes(selectedChannel.id)
-                            ? "text-red-500"
-                            : "text-gray-600"
-                        }`}
-                      >
-                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                      </svg>
-                    </button>
-                  </h2>
-                  <p
-                    className={`text-sm mt-1 ${
-                      isDarkMode ? "text-gray-400" : "text-gray-500"
-                    }`}
-                  >
-                    {categories.find((c) => c.id === selectedChannel.category)
-                      ?.name || "Canal"}
-                  </p>
-                </div>
-                <button
-                  onClick={() => openChannel(selectedChannel.url)}
-                  className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-lg text-white transition-colors"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
-                  </svg>
-                  <span>Abrir em nova aba</span>
-                </button>
+          // Visualização do player com side panel
+          <div className="flex gap-4 max-w-7xl mx-auto animate-fadeIn">
+            {/* Player Section */}
+            <div className="flex-1">
+              <div
+                className={`${
+                  isDarkMode ? "bg-black" : "bg-gray-800"
+                } rounded-xl overflow-hidden shadow-xl aspect-video relative`}
+              >
+                {isLoadingChannel ? (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+                  </div>
+                ) : (
+                  <iframe
+                    src={selectedChannel.url}
+                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    frameBorder="0"
+                    width="100%"
+                    height="100%"
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-autoplay allow-presentation"
+                    referrerPolicy="no-referrer"
+                    loading="lazy"
+                    scrolling="no"
+                    style={{ border: "none" }}
+                    className="w-full h-full"
+                  />
+                )}
               </div>
 
               <div
-                className={`mt-4 pt-3 border-t ${
-                  isDarkMode ? "border-gray-700" : "border-gray-200"
-                } transition-colors`}
+                className={`mt-4 ${
+                  isDarkMode ? "bg-gray-800" : "bg-white"
+                } rounded-xl p-4 shadow-md transition-colors duration-300`}
               >
-                <p
-                  className={`text-sm ${
-                    isDarkMode ? "text-gray-300" : "text-gray-600"
-                  }`}
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h2 className="text-xl font-semibold flex items-center">
+                      {selectedChannel.name}
+                      <button
+                        onClick={(e) => toggleFavorite(selectedChannel.id, e)}
+                        className={`ml-2 transition-transform duration-200 hover:scale-110 ${
+                          favorites.includes(selectedChannel.id)
+                            ? "text-red-500"
+                            : isDarkMode
+                            ? "text-gray-400"
+                            : "text-gray-400"
+                        }`}
+                        aria-label={
+                          favorites.includes(selectedChannel.id)
+                            ? "Remove from favorites"
+                            : "Add to favorites"
+                        }
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill={
+                            favorites.includes(selectedChannel.id)
+                              ? "currentColor"
+                              : "none"
+                          }
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={`${
+                            favorites.includes(selectedChannel.id)
+                              ? "text-red-500"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                        </svg>
+                      </button>
+                    </h2>
+                    <p
+                      className={`text-sm mt-1 ${
+                        isDarkMode ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      {categories.find((c) => c.id === selectedChannel.category)
+                        ?.name || "Canal"}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => openChannel(selectedChannel.url)}
+                    className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-lg text-white transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                    <span>Abrir em nova aba</span>
+                  </button>
+                </div>
+
+                <div
+                  className={`mt-4 pt-3 border-t ${
+                    isDarkMode ? "border-gray-700" : "border-gray-200"
+                  } transition-colors`}
                 >
-                  Se o vídeo não iniciar automaticamente, tente clicar na área
-                  do player ou abrir em uma nova aba.
-                </p>
+                  <p
+                    className={`text-sm ${
+                      isDarkMode ? "text-gray-300" : "text-gray-600"
+                    }`}
+                  >
+                    Se o vídeo não iniciar automaticamente, tente clicar na área
+                    do player ou abrir em uma nova aba.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Side Panel */}
+            <div
+              className={`w-80 flex-shrink-0 ${
+                isDarkMode ? "bg-gray-800" : "bg-white"
+              } rounded-xl p-4 shadow-md transition-colors duration-300`}
+            >
+              <h3
+                className={`text-lg font-semibold mb-4 ${
+                  isDarkMode ? "text-gray-200" : "text-gray-800"
+                }`}
+              >
+                Outros Canais
+              </h3>
+              <div className="space-y-2">
+                {organizedChannels
+                  .filter((channel) => channel.id !== selectedChannel.id)
+                  .map((channel) => (
+                    <div
+                      key={channel.id}
+                      onClick={() => selectChannel(channel)}
+                      className={`${
+                        isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                      } p-3 rounded-lg cursor-pointer transition-colors flex items-center justify-between group`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="text-gray-500"
+                        >
+                          <rect
+                            width="20"
+                            height="15"
+                            x="2"
+                            y="7"
+                            rx="2"
+                            ry="2"
+                          />
+                          <polyline points="17 2 12 7 7 2" />
+                        </svg>
+                        <span
+                          className={`font-medium ${
+                            isDarkMode ? "text-gray-200" : "text-gray-800"
+                          }`}
+                        >
+                          {channel.name}
+                        </span>
+                      </div>
+                      <button
+                        onClick={(e) => toggleFavorite(channel.id, e)}
+                        className={`opacity-0 group-hover:opacity-100 transition-opacity ${
+                          favorites.includes(channel.id)
+                            ? "text-red-500"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill={
+                            favorites.includes(channel.id)
+                              ? "currentColor"
+                              : "none"
+                          }
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
               </div>
             </div>
           </div>
