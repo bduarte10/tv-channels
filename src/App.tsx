@@ -58,12 +58,6 @@ const channels = [
     category: "entertainment",
     url: "https://embedcanaistv.com/multishow/",
   },
-  {
-    id: "simpsons",
-    name: "24h Simpsons",
-    category: "entertainment",
-    url: "https://embedcanaistv.com/24h-simpsons/",
-  },
 ];
 
 function App() {
