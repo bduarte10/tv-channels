@@ -958,15 +958,6 @@ function App() {
           </div>
         )}
       </main>
-
-      {/* Footer */}
-      <footer
-        className={`mt-8 py-4 px-4 ${
-          isDarkMode ? "bg-gray-800 text-gray-400" : "bg-gray-100 text-gray-600"
-        } text-sm text-center`}
-      >
-        <p>Desenvolvido com ❤️ para uma melhor experiência de TV online</p>
-      </footer>
     </div>
   );
 }
